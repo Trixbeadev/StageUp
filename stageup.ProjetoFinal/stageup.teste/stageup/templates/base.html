@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}StageUp - Seu impulso rumo ao sucesso{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    {% block navbar %}
+    <nav class="navbar">
+        <div class="container">
+            <a href="{{ url_for('index') }}" class="logo">
+                <picture>
+                    <source srcset="{{ url_for('static', filename='img/logo-stage1.png') }}" type="image/png">
+                    <source srcset="{{ url_for('static', filename='img/logo stage (1).png') }}" type="image/png">
+                    <img src="{{ url_for('static', filename='img/logo-stage1.svg') }}" alt="StageUp" class="logo-img">
+                </picture>
+                <div class="logo-text">
+                    <span class="logo-name">Stage<span class="logo-up">Up</span></span>
+                    <span class="logo-tagline">Seu impulso rumo ao sucesso</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Inicio</a></li>
+                <li><a href="{{ url_for('sobre') }}" class="{% if request.endpoint == 'sobre' %}active{% endif %}">Sobre</a></li>
+                <li><a href="{{ url_for('vagas') }}" class="{% if request.endpoint == 'vagas' %}active{% endif %}">Vagas</a></li>
+                {% if session.user_id %}
+                <li><a href="{{ url_for('perfil') }}" class="nav-profile-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Perfil
+                </a></li>
+                <li><a href="{{ url_for('logout') }}" class="btn-logout">Sair</a></li>
+                {% else %}
+                <li><a href="{{ url_for('login') }}" class="btn-login">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    {% endblock %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block footer %}
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <picture>
+                        <source srcset="{{ url_for('static', filename='img/logo-stage1.png') }}" type="image/png">
+                        <source srcset="{{ url_for('static', filename='img/logo stage (1).png') }}" type="image/png">
+                        <img src="{{ url_for('static', filename='img/logo-stage1.svg') }}" alt="StageUp" class="logo-img">
+                    </picture>
+                    <div class="logo-text">
+                        <span class="logo-name">Stage<span class="logo-up">Up</span></span>
+                        <span class="logo-tagline">Seu impulso rumo ao sucesso</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
+

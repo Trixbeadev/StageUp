@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Perfil - StageUp{% endblock %}
+
+{% block content %}
+<section class="profile-edit-section">
+    <div class="container-profile">
+        <div class="profile-edit-header">
+            <h1>Editar Perfil</h1>
+            <p>Atualize suas informações e mostre seu melhor perfil profissional</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('editar_perfil') }}" class="profile-edit-form">
+            <!-- Cover Image -->
+            <div class="cover-image-section">
+                <div class="cover-image-placeholder" style="background: linear-gradient(135deg, #BDB0D9 0%, #7D6AA6 50%, #A68881 100%);">
+                    <button type="button" class="edit-cover-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        Editar imagem de capa
+                    </button>
+                </div>
+            </div>
+
+            <!-- Profile Photo -->
+            <div class="profile-photo-section">
+                <div class="profile-photo-wrapper">
+                    <div class="profile-photo-placeholder" style="background: linear-gradient(135deg, #BDB0D9 0%, #7D6AA6 50%, #A68881 100%);">
+                        <span class="photo-initials">{{ (user.name[0] if user.name else user.email[0])|upper }}</span>
+                    </div>
+                    <div class="profile-photo-actions">
+                        <button type="button" class="btn-photo-action">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            Upload nova imagem
+                        </button>
+                        <button type="button" class="btn-photo-action btn-danger">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                            Deletar imagem atual
+                        </button>
+                    </div>
+                    <p class="photo-help-text">Esta foto será visível para outros usuários.</p>
+                </div>
+            </div>
+
+            <!-- Form Fields -->
+            <div class="profile-form-content">
+                <!-- Nome Completo -->
+                <div class="form-field-group">
+                    <label for="name" class="form-label">
+                        Nome Completo
+                        <span class="label-help">Seu nome de exibição.</span>
+                    </label>
+                    <input type="text" id="name" name="name" class="form-input" value="{{ user.name or '' }}" placeholder="Seu nome completo">
+                </div>
+
+                <!-- Username -->
+                <div class="form-field-group">
+                    <label for="username" class="form-label">
+                        Nome de Usuário
+                        <span class="label-help">Seu identificador único.</span>
+                    </label>
+                    <div class="username-input-wrapper">
+                        <span class="username-prefix">stageup.com/</span>
+                        <input type="text" id="username" name="username" class="form-input username-input" value="{{ user.username or '' }}" placeholder="seuusuario">
+                        <span class="username-check">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Skills -->
+                <div class="form-field-group">
+                    <label for="skills" class="form-label">
+                        O que você faz?
+                        <span class="label-help">Suas principais habilidades (até 20).</span>
+                    </label>
+                    <div class="skills-input-wrapper">
+                        <div class="skills-tags" id="skillsTags">
+                            {% for skill in skills_list %}
+                            <span class="skill-tag">
+                                {{ skill }}
+                                <button type="button" class="skill-remove" onclick="removeSkill(this)">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                            </span>
+                            {% endfor %}
+                        </div>
+                        <div class="skills-input-container">
+                            <input type="text" id="skillsInput" class="form-input skills-input" placeholder="Digite uma habilidade e pressione Enter">
+                            <button type="button" class="add-skill-btn" onclick="addSkill()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                        </div>
+                        <input type="hidden" id="skills" name="skills" value="{{ skills_list|join(',') }}">
+                    </div>
+                </div>
+
+                <!-- Localização e Timezone -->
+                <div class="form-field-group">
+                    <label for="location" class="form-label">
+                        Localização e Fuso Horário
+                    </label>
+                    <div class="location-inputs">
+                        <input type="text" id="location" name="location" class="form-input" value="{{ user.location or '' }}" placeholder="Ex: São Paulo, SP">
+                        <select id="timezone" name="timezone" class="form-input">
+                            <option value="">Selecione o fuso horário</option>
+                            <option value="America/Sao_Paulo" {% if user.timezone == 'America/Sao_Paulo' %}selected{% endif %}>Brasília (UTC-3)</option>
+                            <option value="America/Manaus" {% if user.timezone == 'America/Manaus' %}selected{% endif %}>Manaus (UTC-4)</option>
+                            <option value="America/Rio_Branco" {% if user.timezone == 'America/Rio_Branco' %}selected{% endif %}>Rio Branco (UTC-5)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Sobre Você -->
+                <div class="form-field-group">
+                    <label for="bio" class="form-label">
+                        Sobre Você
+                    </label>
+                    <textarea id="bio" name="bio" class="form-textarea" rows="6" placeholder="Conte um pouco sobre você, suas experiências e objetivos profissionais...">{{ user.bio or '' }}</textarea>
+                    <div class="textarea-toolbar">
+                        <button type="button" class="toolbar-btn" onclick="formatText('bold')" title="Negrito">
+                            <strong>B</strong>
+                        </button>
+                        <button type="button" class="toolbar-btn" onclick="formatText('italic')" title="Itálico">
+                            <em>I</em>
+                        </button>
+                        <button type="button" class="toolbar-btn" onclick="formatText('underline')" title="Sublinhado">
+                            <u>U</u>
+                        </button>
+                        <button type="button" class="toolbar-btn" onclick="formatText('list')" title="Lista">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <line x1="8" y1="6" x2="21" y2="6"></line>
+                                <line x1="8" y1="12" x2="21" y2="12"></line>
+                                <line x1="8" y1="18" x2="21" y2="18"></line>
+                                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Website -->
+                <div class="form-field-group">
+                    <label for="website" class="form-label">
+                        Site Pessoal
+                        <span class="label-help">Seu site, blog ou página da empresa.</span>
+                    </label>
+                    <input type="url" id="website" name="website" class="form-input" value="{{ user.website or '' }}" placeholder="https://seu-site.com">
+                </div>
+
+                <!-- Redes Sociais -->
+                <div class="form-field-group">
+                    <label class="form-label">
+                        Conecte suas redes sociais
+                        <span class="label-help">Adicione links para suas redes profissionais.</span>
+                    </label>
+                    <div class="social-inputs">
+                        <div class="social-input-group">
+                            <svg class="social-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                            <input type="url" name="linkedin_url" class="form-input social-input" value="{{ user.linkedin_url or '' }}" placeholder="linkedin.com/in/seu-perfil">
+                            <span class="social-check">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="social-input-group">
+                            <svg class="social-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                            </svg>
+                            <input type="url" name="github_url" class="form-input social-input" value="{{ user.github_url or '' }}" placeholder="github.com/seu-usuario">
+                            <span class="social-check">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="social-input-group">
+                            <svg class="social-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            <input type="url" name="portfolio_url" class="form-input social-input" value="{{ user.portfolio_url or '' }}" placeholder="seu-portfolio.com">
+                            <span class="social-check">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Buttons -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-large">Salvar Alterações</button>
+                    <a href="{{ url_for('perfil') }}" class="btn btn-secondary btn-large">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let skillsArray = {{ skills_list|tojson }};
+
+    function addSkill() {
+        const input = document.getElementById('skillsInput');
+        const skill = input.value.trim();
+        
+        if (skill && skillsArray.length < 20 && !skillsArray.includes(skill)) {
+            skillsArray.push(skill);
+            updateSkillsDisplay();
+            input.value = '';
+        }
+    }
+
+    function removeSkill(btn) {
+        const tag = btn.closest('.skill-tag');
+        const skill = tag.textContent.trim().replace('×', '').trim();
+        skillsArray = skillsArray.filter(s => s !== skill);
+        updateSkillsDisplay();
+    }
+
+    function updateSkillsDisplay() {
+        const container = document.getElementById('skillsTags');
+        const hiddenInput = document.getElementById('skills');
+        
+        container.innerHTML = skillsArray.map(skill => `
+            <span class="skill-tag">
+                ${skill}
+                <button type="button" class="skill-remove" onclick="removeSkill(this)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </span>
+        `).join('');
+        
+        hiddenInput.value = skillsArray.join(',');
+    }
+
+    document.getElementById('skillsInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addSkill();
+        }
+    });
+
+    function formatText(command) {
+        const textarea = document.getElementById('bio');
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const selectedText = textarea.value.substring(start, end);
+        
+        let formattedText = '';
+        switch(command) {
+            case 'bold':
+                formattedText = `**${selectedText}**`;
+                break;
+            case 'italic':
+                formattedText = `*${selectedText}*`;
+                break;
+            case 'underline':
+                formattedText = `__${selectedText}__`;
+                break;
+            case 'list':
+                formattedText = `- ${selectedText}`;
+                break;
+        }
+        
+        textarea.value = textarea.value.substring(0, start) + formattedText + textarea.value.substring(end);
+        textarea.focus();
+    }
+</script>
+{% endblock %}
+

@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+
+{% block title %}Vagas - StageUp{% endblock %}
+
+{% block content %}
+<section class="vagas-section-modern">
+    <div class="container-vagas">
+        <!-- Hero Search Section -->
+        <div class="search-hero">
+            <h1 class="search-hero-title">
+                <span class="star-icon">⭐</span>
+                Encontre o Estágio dos Seus Sonhos
+            </h1>
+            <form method="GET" action="{{ url_for('vagas') }}" class="hero-search-form">
+                <div class="search-inputs-wrapper">
+                    <div class="search-input-group">
+                        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" name="palavra_chave" placeholder="Título da vaga ou palavra-chave" value="{{ palavra_chave }}" class="hero-search-input">
+                    </div>
+                    <div class="search-input-group">
+                        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <input type="text" name="cidade" placeholder="Cidade ou estado" value="{{ cidade }}" class="hero-search-input">
+                    </div>
+                    <button type="submit" class="btn-search-hero">
+                        <span>Buscar</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="vagas-layout">
+            <!-- Sidebar de Filtros -->
+            <aside class="filters-sidebar">
+                <div class="filters-header">
+                    <h3>Filtros</h3>
+                    <a href="{{ url_for('vagas') }}" class="clear-filters">Limpar tudo</a>
+                </div>
+
+                <form method="GET" action="{{ url_for('vagas') }}" id="filtersForm">
+                    <input type="hidden" name="palavra_chave" value="{{ palavra_chave }}">
+                    <input type="hidden" name="cidade" value="{{ cidade }}">
+
+                    <!-- Tipo de Período -->
+                    <div class="filter-section">
+                        <h4 class="filter-title">Tipo de Período</h4>
+                        <div class="filter-options">
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="periodo" value="Período Integral" 
+                                    {% if 'Período Integral' in request.args.getlist('periodo') %}checked{% endif %}
+                                    onchange="document.getElementById('filtersForm').submit()">
+                                <span>Período Integral</span>
+                                <span class="job-count">{{ filter_counts.periodo_integral }}</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="periodo" value="Meio Período" 
+                                    {% if 'Meio Período' in request.args.getlist('periodo') %}checked{% endif %}
+                                    onchange="document.getElementById('filtersForm').submit()">
+                                <span>Meio Período</span>
+                                <span class="job-count">{{ filter_counts.periodo_meio }}</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Modalidade -->
+                    <div class="filter-section">
+                        <h4 class="filter-title">Modalidade</h4>
+                        <div class="filter-options">
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="modalidade" value="Presencial" 
+                                    {% if 'Presencial' in request.args.getlist('modalidade') %}checked{% endif %}
+                                    onchange="document.getElementById('filtersForm').submit()">
+                                <span>Presencial</span>
+                                <span class="job-count">{{ filter_counts.modalidade_presencial }}</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="modalidade" value="Home Office" 
+                                    {% if 'Home Office' in request.args.getlist('modalidade') %}checked{% endif %}
+                                    onchange="document.getElementById('filtersForm').submit()">
+                                <span>Home Office</span>
+                                <span class="job-count">{{ filter_counts.modalidade_home_office }}</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="modalidade" value="Híbrido" 
+                                    {% if 'Híbrido' in request.args.getlist('modalidade') %}checked{% endif %}
+                                    onchange="document.getElementById('filtersForm').submit()">
+                                <span>Híbrido</span>
+                                <span class="job-count">{{ filter_counts.modalidade_hibrido }}</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Área -->
+                    <div class="filter-section">
+                        <h4 class="filter-title">Área</h4>
+                        <div class="filter-options">
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="area" value="Tecnologia" 
+                                    {% if 'Tecnologia' in request.args.getlist('area') %}checked{% endif %}
+                                    onchange="document.getElementById('filtersForm').submit()">
+                                <span>Tecnologia</span>
+                                <span class="job-count">{{ filter_counts.area_tecnologia }}</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="area" value="Marketing" 
+                                    {% if 'Marketing' in request.args.getlist('area') %}checked{% endif %}
+                                    onchange="document.getElementById('filtersForm').submit()">
+                                <span>Marketing</span>
+                                <span class="job-count">{{ filter_counts.area_marketing }}</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="area" value="Administração" 
+                                    {% if 'Administração' in request.args.getlist('area') %}checked{% endif %}
+                                    onchange="document.getElementById('filtersForm').submit()">
+                                <span>Administração</span>
+                                <span class="job-count">{{ filter_counts.area_administracao }}</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="area" value="RH" 
+                                    {% if 'RH' in request.args.getlist('area') %}checked{% endif %}
+                                    onchange="document.getElementById('filtersForm').submit()">
+                                <span>RH</span>
+                                <span class="job-count">{{ filter_counts.area_rh }}</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="area" value="Contabilidade" 
+                                    {% if 'Contabilidade' in request.args.getlist('area') %}checked{% endif %}
+                                    onchange="document.getElementById('filtersForm').submit()">
+                                <span>Contabilidade</span>
+                                <span class="job-count">{{ filter_counts.area_contabilidade }}</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="area" value="Design" 
+                                    {% if 'Design' in request.args.getlist('area') %}checked{% endif %}
+                                    onchange="document.getElementById('filtersForm').submit()">
+                                <span>Design</span>
+                                <span class="job-count">{{ filter_counts.area_design }}</span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </aside>
+
+            <!-- Área Principal de Vagas -->
+            <main class="vagas-main">
+                <div class="vagas-header">
+                    <div class="vagas-count">
+                        <h2>Vagas Encontradas</h2>
+                        <span class="count-number">{{ vagas|length }} vagas</span>
+                    </div>
+                    <div class="sort-options">
+                        <label>Ordenar por:</label>
+                        <select class="sort-select">
+                            <option>Mais recentes</option>
+                            <option>Maior salário</option>
+                            <option>Mais relevantes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="vagas-grid">
+                    {% if vagas %}
+                        {% for vaga in vagas %}
+                        <div class="vaga-card-modern vaga-card-hover-modern">
+                            <div class="vaga-card-decoration-modern"></div>
+                            <div class="vaga-card-header">
+                                <div class="company-logo">
+                                    <div class="logo-placeholder">{{ vaga.empresa[0] if vaga.empresa else 'C' }}</div>
+                                </div>
+                                <button class="favorite-btn" aria-label="Favoritar">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="vaga-card-body">
+                                <h3 class="vaga-title-modern">{{ vaga.titulo }}</h3>
+                                <p class="vaga-company-modern">{{ vaga.empresa }} • {{ vaga.cidade }}, {{ vaga.estado }}</p>
+                                <div class="vaga-tags">
+                                    <span class="tag tag-periodo">{{ vaga.tipo_periodo }}</span>
+                                    <span class="tag tag-modalidade">{{ vaga.modalidade }}</span>
+                                    <span class="tag tag-area">{{ vaga.area }}</span>
+                                </div>
+                                {% if vaga.descricao %}
+                                <p class="vaga-description-modern">{{ vaga.descricao[:150] }}{% if vaga.descricao|length > 150 %}...{% endif %}</p>
+                                {% endif %}
+                                <div class="vaga-footer-modern">
+                                    <div class="vaga-salary">
+                                        {% if vaga.salario %}
+                                        <strong>{{ vaga.salario }}</strong>
+                                        {% else %}
+                                        <span class="salary-placeholder">Salário a combinar</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="vaga-date">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                        {% if vaga.created_at %}
+                                        Publicado recentemente
+                                        {% else %}
+                                        Publicado recentemente
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="vaga-card-actions">
+                                <a href="{{ url_for('redirect_vaga', vaga_id=vaga.id) }}" class="btn-apply btn-apply-hover" target="_blank">
+                                    <span>Candidatar-se</span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-vagas-modern">
+                            <div class="no-vagas-icon">🔍</div>
+                            <h3>Nenhuma vaga encontrada</h3>
+                            <p>Tente ajustar os filtros ou buscar por outros termos.</p>
+                            <a href="{{ url_for('vagas') }}" class="btn btn-primary">Limpar Filtros</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </main>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Favoritar vaga
+    document.querySelectorAll('.favorite-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.classList.toggle('active');
+        });
+    });
+</script>
+{% endblock %}

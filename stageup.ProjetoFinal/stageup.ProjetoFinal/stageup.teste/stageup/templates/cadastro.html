@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastro - StageUp{% endblock %}
+
+{% block content %}
+<section class="cadastro-page">
+    <div class="cadastro-container">
+        <div class="cadastro-image-section">
+            <div class="cadastro-image-wrapper">
+                <img src="{{ url_for('static', filename='estudantelogin.png') }}" alt="Estudante" />
+            </div>
+        </div>
+
+        <div class="cadastro-form-section">
+            <div class="cadastro-form-card">
+                <h1 class="cadastro-title">Criar Conta</h1>
+                <p class="cadastro-subtitle">Cadastre-se gratuitamente e comece a encontrar seu estágio ideal</p>
+
+                <form method="POST" action="{{ url_for('cadastro') }}" class="cadastro-form">
+                    <input type="text" id="name" name="name" placeholder="Nome" required autofocus class="cadastro-input">
+                    <input type="email" id="email" name="email" placeholder="Email" required class="cadastro-input">
+                    <input type="password" id="password" name="password" placeholder="Senha" required class="cadastro-input">
+                    <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirmar senha" required class="cadastro-input">
+
+                    <button type="submit" class="cadastro-btn">Cadastrar</button>
+                </form>
+
+                <div class="cadastro-divider"><span>ou</span></div>
+
+                <div class="cadastro-socials">
+                    <a href="{{ url_for('auth_google') }}" class="social-pill social-google"><span class="social-icon">G</span> Google</a>
+                    <a href="{{ url_for('auth_apple') }}" class="social-pill social-apple"><span class="social-icon"></span> Apple</a>
+                    <a href="{{ url_for('auth_linkedin') }}" class="social-pill social-linkedin"><span class="social-icon">in</span> Linkedin</a>
+                </div>
+
+                <p class="auth-footer">Já tem conta? <a href="{{ url_for('login') }}">Faça Login</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

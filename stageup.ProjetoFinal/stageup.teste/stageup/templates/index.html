@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Início - StageUp{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-background-shapes">
+        <div class="hero-shape hero-shape-1"></div>
+        <div class="hero-shape hero-shape-2"></div>
+        <div class="hero-shape hero-shape-3"></div>
+    </div>
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title-animated">Encontre o Estágio Perfeito para Você</h1>
+            <p class="hero-subtitle">Conectamos estudantes com as melhores oportunidades de estágio do mercado</p>
+            <div class="hero-actions">
+                <a href="{{ url_for('vagas') }}" class="btn btn-primary btn-hover-effect">
+                    <span>Ver Vagas</span>
+                    <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+                <a href="{{ url_for('sobre') }}" class="btn btn-secondary btn-hover-effect">
+                    <span>Saiba Mais</span>
+                    <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="container">
+        <h2 class="section-title section-title-animated">Por que escolher o StageUp?</h2>
+        <div class="features-grid">
+            <div class="feature-card feature-card-hover">
+                <div class="feature-icon-wrapper">
+                    <div class="feature-icon">🔍</div>
+                    <div class="feature-decoration"></div>
+                </div>
+                <h3>Busca Inteligente</h3>
+                <p>Encontre vagas que combinam com seu perfil e interesses</p>
+                <div class="feature-hover-line"></div>
+            </div>
+            <div class="feature-card feature-card-hover">
+                <div class="feature-icon-wrapper">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-decoration"></div>
+                </div>
+                <h3>Atualizações em Tempo Real</h3>
+                <p>Receba notificações sobre novas oportunidades</p>
+                <div class="feature-hover-line"></div>
+            </div>
+            <div class="feature-card feature-card-hover">
+                <div class="feature-icon-wrapper">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-decoration"></div>
+                </div>
+                <h3>Filtros Avançados</h3>
+                <p>Filtre por área, localização, modalidade e muito mais</p>
+                <div class="feature-hover-line"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if vagas_recentes %}
+<section class="recent-jobs">
+    <div class="container">
+        <h2 class="section-title">Vagas em Destaque</h2>
+        
+        <div class="jobs-carousel">
+            <div class="carousel-container">
+                <div class="carousel-wrapper" id="carouselWrapper">
+                    {% for vaga in vagas_recentes %}
+                    <div class="carousel-item">
+                        <div class="job-card job-card-hover">
+                            <div class="job-card-decoration"></div>
+                            <div class="vaga-header" style="margin-bottom: 1rem;">
+                                <h3>{{ vaga.titulo }}</h3>
+                                <span class="vaga-area">{{ vaga.area }}</span>
+                            </div>
+                            <p class="job-company"><strong>Empresa:</strong> {{ vaga.empresa }}</p>
+                            <p class="job-location"><strong>Local:</strong> {{ vaga.cidade }}, {{ vaga.estado }}</p>
+                            <p class="job-type">{{ vaga.tipo_periodo }} • {{ vaga.modalidade }}</p>
+                            {% if vaga.salario %}
+                            <p style="color: var(--primary-color); font-weight: 600; margin: 0.5rem 0;">{{ vaga.salario }}</p>
+                            {% endif %}
+                            {% if vaga.descricao %}
+                            <p class="vaga-descricao" style="margin-top: 1rem;">{{ vaga.descricao[:100] }}{% if vaga.descricao|length > 100 %}...{% endif %}</p>
+                            {% endif %}
+                            <div style="margin-top: 1.5rem;">
+                                <a href="{{ url_for('redirect_vaga', vaga_id=vaga.id) }}" class="btn btn-primary btn-small btn-hover-effect" target="_blank">
+                                    <span>Ver Detalhes</span>
+                                    <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="carousel-nav">
+                    <button class="carousel-btn" id="prevBtn" aria-label="Anterior">‹</button>
+                    <button class="carousel-btn" id="nextBtn" aria-label="Próximo">›</button>
+                </div>
+                
+                <div class="carousel-dots" id="carouselDots"></div>
+            </div>
+        </div>
+        
+        <div class="text-center" style="margin-top: 2rem;">
+            <a href="{{ url_for('vagas') }}" class="btn btn-primary btn-hover-effect">
+                <span>Ver Todas as Vagas</span>
+                <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+

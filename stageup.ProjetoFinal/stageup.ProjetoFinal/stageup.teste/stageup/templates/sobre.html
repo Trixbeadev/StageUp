@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Sobre - StageUp{% endblock %}
+
+{% block content %}
+<section class="about-section">
+    <div class="about-background-decoration">
+        <div class="about-decoration-circle"></div>
+        <div class="about-decoration-circle"></div>
+        <div class="about-decoration-circle"></div>
+    </div>
+    <div class="container">
+        <h1 class="page-title page-title-animated">Sobre o StageUp</h1>
+        
+        <div class="about-content">
+            <div class="about-intro about-card-hover">
+                <div class="about-card-decoration"></div>
+                <h2>Nossa Missão</h2>
+                <p>
+                    O StageUp foi criado com o objetivo de facilitar a busca por oportunidades de estágio, 
+                    conectando estudantes talentosos com empresas que buscam novos talentos. Acreditamos que 
+                    todo estudante merece uma chance de crescer profissionalmente e desenvolver suas habilidades 
+                    em um ambiente de trabalho real.
+                </p>
+            </div>
+            
+            <div class="about-features">
+                <h2 class="section-title-animated">O que oferecemos</h2>
+                <div class="features-list">
+                    <div class="feature-item feature-item-hover">
+                        <div class="feature-item-icon">🔍</div>
+                        <div class="feature-item-content">
+                            <h3>Busca Inteligente</h3>
+                            <p>Encontre vagas que combinam perfeitamente com seu perfil, área de interesse e localização.</p>
+                        </div>
+                        <div class="feature-item-hover-effect"></div>
+                    </div>
+                    <div class="feature-item feature-item-hover">
+                        <div class="feature-item-icon">⚡</div>
+                        <div class="feature-item-content">
+                            <h3>Atualizações em Tempo Real</h3>
+                            <p>Receba notificações instantâneas sobre novas oportunidades que correspondem aos seus critérios.</p>
+                        </div>
+                        <div class="feature-item-hover-effect"></div>
+                    </div>
+                    <div class="feature-item feature-item-hover">
+                        <div class="feature-item-icon">🎯</div>
+                        <div class="feature-item-content">
+                            <h3>Filtros Avançados</h3>
+                            <p>Filtre vagas por período (integral ou meio período), modalidade (presencial, home office ou híbrido), área e muito mais.</p>
+                        </div>
+                        <div class="feature-item-hover-effect"></div>
+                    </div>
+                    <div class="feature-item feature-item-hover">
+                        <div class="feature-item-icon">🔗</div>
+                        <div class="feature-item-content">
+                            <h3>Integração com CIEE</h3>
+                            <p>Conectamos você diretamente com as vagas disponíveis no portal da CIEE, facilitando o processo de candidatura.</p>
+                        </div>
+                        <div class="feature-item-hover-effect"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="about-cta about-cta-hover">
+                <div class="cta-decoration"></div>
+                <h2>Pronto para começar?</h2>
+                <p>Cadastre-se gratuitamente e comece a encontrar seu estágio ideal hoje mesmo!</p>
+                <div class="cta-buttons">
+                    <a href="{{ url_for('cadastro') }}" class="btn btn-primary btn-hover-effect">
+                        <span>Criar Conta</span>
+                        <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="8.5" cy="7" r="4"></circle>
+                            <line x1="20" y1="8" x2="20" y2="14"></line>
+                            <line x1="23" y1="11" x2="17" y2="11"></line>
+                        </svg>
+                    </a>
+                    <a href="{{ url_for('vagas') }}" class="btn btn-secondary btn-hover-effect">
+                        <span>Ver Vagas</span>
+                        <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
